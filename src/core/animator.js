@@ -1,83 +1,82 @@
-export class Animator {
-  constructor(img) {
-    this.animations = {};
-    this.currentAnimation = null;
-    this.state = null;
-    this.currentTime = 0;
-    this.currentFrame = 0;
-    this.isActive = false;
-    this.img = img;
-  }
+export function Animator(img) {
+  const _img = img;
+  const _animations = {};
+  let _currentAnimation = null;
+  let _currentTime = 0;
+  let _currentFrame = 0;
+  let _isActive = false;
 
-  addAnimation(name, animation) {
-    this.animations[name] = animation;
-  }
-
-  setActive(isActive) { this.isActive = isActive; }
-  setCurrentTime(currentTime) { this.currentTime = currentTime; }
-  getCurrentAnimation() { return this.currentAnimation; }
-  hasAnimationFinished() {
-    const anim = this.animations[this.currentAnimation];
+  const addAnimation = (name, animation) => _animations[name] = animation;
+  const setActive = (isActive) => _isActive = isActive;
+  const setCurrentTime = (currentTime) => _currentTime = currentTime;
+  const getCurrentAnimation = () => _currentAnimation;
+  const hasAnimationFinished = () => {
+    const anim = _animations[_currentAnimation];
     if (anim.isLoop) return false;
-    return this.currentFrame === anim.frameCount;
+    return _currentFrame === anim.frameCount;
   }
-
-  setAnimation(name) {
-    if (name === this.currentAnimation) return;
-    this.currentAnimation = name;
-    this.currentTime = 0;
-    this.currentFrame = 0;
+  const setAnimation = (name) => {
+    if (name === _currentAnimation) return;
+    _currentAnimation = name;
+    _currentTime = 0;
+    _currentFrame = 0;
   }
+  const render = (deltaTime, ctx, xPos, yPos, scale) => {
+    const anim = _animations[_currentAnimation];
+    if (!_isActive) return;
 
-  render(deltaTime, canvas, ctx, xPos, yPos, scale) {
-    const {
-      x,
-      y,
-      tileWidth,
-      tileHeight,
-      frameDuration,
-      frameCount,
-      isLoop,
-    } = this.animations[this.currentAnimation];
-    if (!this.isActive) return;
-
-    if (this.currentFrame === frameCount && !isLoop) {
+    if (_currentFrame === anim.getFrameCount() && !anim.isLoop()) {
 
     } else {
-      this.currentTime += deltaTime;
-      if (this.currentTime >= frameDuration) {
-        const leftOverTime = this.currentTime - frameDuration;
-        this.currentTime = leftOverTime;
-        this.currentFrame++;
-        if (this.currentFrame > frameCount) this.currentFrame = 0;
+      _currentTime += deltaTime;
+      if (_currentTime >= anim.getFrameDuration()) {
+        const leftOverTime = _currentTime - anim.getFrameDuration();
+        _currentTime = leftOverTime;
+        _currentFrame++;
+        if (_currentFrame > anim.getFrameCount()) _currentFrame = 0;
       }
     }
 
-
     ctx.drawImage(
-      this.img,
-      x + (this.currentFrame * tileWidth),
-      y,
-      tileWidth,
-      tileHeight,
+      _img,
+      anim.getX() + (_currentFrame * anim.getTileWidth()),
+      anim.getY(),
+      anim.getTileWidth(),
+      anim.getTileHeight(),
       xPos,
       yPos,
-      tileWidth * scale,
-      tileHeight * scale,
+      anim.getTileWidth() * scale,
+      anim.getTileHeight() * scale,
     );
   }
+
+  return {
+    addAnimation,
+    setActive,
+    setCurrentTime,
+    getCurrentAnimation,
+    hasAnimationFinished,
+    setAnimation,
+    render,
+  };
 }
 
-export class Animation {
-  constructor(x, y, tileWidth, tileHeight, frameCount, frameDuration, isLoop) {
-    this.x = x;
-    this.y = y;
-    this.tileWidth = tileWidth;
-    this.tileHeight = tileHeight;
-    this.frameCount = frameCount;
-    this.frameDuration = frameDuration;
-    this.loop = true;
-    this.next = null;
-    this.isLoop = isLoop;
+export function Animation(x, y, tileWidth, tileHeight, frameCount, frameDuration, isLoop) {
+  const _x = x;
+  const _y = y;
+  const _tileWidth = tileWidth;
+  const _tileHeight = tileHeight;
+  const _frameCount = frameCount;
+  const _frameDuration = frameDuration;
+  const _isLoop = isLoop;
+
+  return {
+    getX: () => _x,
+    getY: () => _y,
+    getTileWidth: () => _tileWidth,
+    getTileHeight: () => _tileHeight,
+    getFrameDuration: () => _frameDuration,
+    getFrameCount: () => _frameCount,
+    isLoop: () => _isLoop,
   }
 }

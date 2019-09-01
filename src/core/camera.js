@@ -5,7 +5,7 @@ export function Camera(x, y, canvas) {
 
   let _debugMode = true;
   let _debugX = 0, _debugY = 0;
-  let _debugCameraSpeed = 100;
+  let _debugCameraSpeed = 300;
 
   const toggleDebugMode = () => _debugMode = !_debugMode;
 

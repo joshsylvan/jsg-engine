@@ -13,21 +13,23 @@ export function Scene(name, gameObjectsData, uiObjectsData) {
   let _camera;
 
   const _addGameObjectToMap = (obj) => {
-    const key = obj.tag;
-    if (_idGameMap[key]) {
-      _idGameMap[key].push(obj);
-    } else {
-      _idGameMap[key] = [obj];
-    }
+    obj.tags.forEach(tag => {
+      if (_idGameMap[tag]) {
+        _idGameMap[tag].push(obj);
+      } else {
+        _idGameMap[tag] = [obj];
+      }
+    });
   }
 
   const _addUiObjectToMap = (obj) => {
-    const key = obj.tag;
-    if (_idUiMap[key]) {
-      _idUiMap[key].push(obj);
-    } else {
-      _idUiMap[key] = [obj];
-    }
+    obj.tags.forEach(tag => {
+      if (_idUiMap[tag]) {
+        _idUiMap[tag].push(obj);
+      } else {
+        _idUiMap[tag] = [obj];
+      }
+    });
   }
 
   const loadScene = () => {

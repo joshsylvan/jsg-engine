@@ -9,14 +9,14 @@ export class Collider {
     this.isStatic = false;
     this.type = 'box';
   }
-  
+
   render(deltaTime, canvas, ctx, x, y) {
     const { xOffset, yOffset, width, scale } = this;
-    const xMult = xOffset === 0 ? 1 : xOffset;
-    const yMult = yOffset === 0 ? 1 : yOffset;
+    // const xMult = xOffset === 0 ? 1 : xOffset;
+    // const yMult = yOffset === 0 ? 1 : yOffset;
     ctx.beginPath();
     ctx.strokeStyle = '#00ff00';
-    ctx.rect(x + (xMult * scale), y + (yMult * scale), width * scale, this.height * scale);
+    ctx.rect(x + (xOffset * scale) - 0.5, y + (yOffset * scale) - 0.5, width * scale, this.height * scale);
     ctx.stroke();
     ctx.closePath();
     ctx.strokeStyle = '#000000';

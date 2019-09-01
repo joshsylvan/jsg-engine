@@ -8,10 +8,12 @@ export function Input(canvas) {
   let _mouseData = null;
 
   const _onKeyDown = function (e) {
+    e.preventDefault();
     _keyDown[e.keyCode] = true;
   }
 
   const _onKeyUp = function (e) {
+    e.preventDefault();
     _keyDown[e.keyCode] = false;
     _keyPressed[e.keyCode] = true;
     setTimeout(() => _keyPressed[e.keyCode] = false, _keyUpDelay);

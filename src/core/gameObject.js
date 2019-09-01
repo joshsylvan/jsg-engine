@@ -1,5 +1,5 @@
 export class GameObject {
-  constructor(x, y, width, height, scale, tag) {
+  constructor(x, y, width, height, scale, tags) {
     this.x = x;
     this.y = y;
     this.width = width;
@@ -7,7 +7,7 @@ export class GameObject {
     this.scale = scale;
     this.collider = null;
     this.animator = null;
-    this.tag = tag;
+    this.tags = tags;
     this.layer = 0;
   }
   init(GameManager) { }

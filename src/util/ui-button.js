@@ -1,10 +1,11 @@
-import { GameObject } from '../gameObject';
-import { Collider, isPointInBox } from '../collisions';
+import { GameObject } from '../core/gameObject';
+import { Collider, isPointInBox } from '../core/collisions';
 
 // TODO: fix the mouse scaling issue
+// TODO: somthing to do with css scaling when the canvas does not start on the left of the screen (if entered may not work)
 export class UiButton extends GameObject {
-  constructor(x, y, width, height, scale, tag) {
-    super(x, y, width, height, scale, tag);
+  constructor(x, y, width, height, scale, tags) {
+    super(x, y, width, height, scale, tags);
 
     this._text = 'button';
 
@@ -18,7 +19,7 @@ export class UiButton extends GameObject {
     this._buttonStates = {
       'idle': { ...defaultProps },
       'hover': { ...defaultProps },
-      'clicked': { ...defaultProps },
+      'click': { ...defaultProps },
       'disabled': { ...defaultProps },
     };
     this._buttonProps = this._buttonStates['idle'];
@@ -83,12 +84,11 @@ export class UiButton extends GameObject {
     const { textSize, textColor, backgroundColor } = _buttonProps;
     const cameraPos = Camera.getPosition();
     ctx.beginPath();
-
     ctx.fillStyle = backgroundColor;
     ctx.rect(x - cameraPos.x, y - cameraPos.y, width * scale, height * scale);
     ctx.fill();
 
-    ctx.font = `${textSize}px Verdana`;
+    ctx.font = `${textSize}px Avenir`;
     ctx.fillStyle = textColor;
     ctx.textAlign = "center";
     ctx.fillText(

@@ -1,8 +1,8 @@
-import { GameObject } from '../gameObject';
+import { GameObject } from '../core/gameObject';
 
 export class UiImage extends GameObject {
-  constructor(x, y, dx, dy, width, height, scale, tag, imageSrc) {
-    super(x, y, width, height, scale, tag);
+  constructor(x, y, dx, dy, width, height, scale, tags, imageSrc) {
+    super(x, y, width, height, scale, tags);
     this.dx = dx;
     this.dy = dy;
     const img = new Image();
