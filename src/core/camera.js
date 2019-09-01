@@ -18,12 +18,18 @@ export function Camera(x, y, canvas) {
     _y = y;
   }
 
-  const update = ({ canvas, ctx, deltaTime, InputManager, GameManager, Camera }) => {
+  const input = ({ deltaTime, InputManager }) => {
+    if (InputManager.isKeyUp(130)) toggleDebugMode();
     if (_debugMode) {
       if (InputManager.isKeyHeld(37)) _debugX -= _debugCameraSpeed * deltaTime;
       if (InputManager.isKeyHeld(38)) _debugY -= _debugCameraSpeed * deltaTime;
       if (InputManager.isKeyHeld(39)) _debugX += _debugCameraSpeed * deltaTime;
       if (InputManager.isKeyHeld(40)) _debugY += _debugCameraSpeed * deltaTime;
+    }
+  }
+
+  const update = ({ canvas, ctx, deltaTime, InputManager, GameManager, Camera }) => {
+    if (_debugMode) {
       _x = -_debugX + _canvas.width / 2;
       _y = -_debugY + _canvas.height / 2;
       return;
@@ -38,6 +44,7 @@ export function Camera(x, y, canvas) {
   }
 
   return {
+    input,
     update,
     setTarget,
     setPosition,

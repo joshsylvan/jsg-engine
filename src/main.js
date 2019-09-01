@@ -41,6 +41,7 @@ export const createGame = (canvas) => {
     GameManager.getCurrentScene().getUiObjects().forEach(obj => {
       obj.input({ canvas, ctx, deltaTime, InputManager, GameManager, Camera });
     });
+    Camera.input({ canvas, ctx, deltaTime, InputManager, GameManager, Camera });
   }
 
   const update = (deltaTime) => {

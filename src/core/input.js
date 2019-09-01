@@ -3,9 +3,13 @@ export function Input(canvas) {
   const _keyDown = {};
   const _keyPressed = {};
   const _keyUpDelay = 100;
+  const _scrollTimeout = 100;
   let _mouseDown = false;
   let _mouseUp = false;
   let _mouseData = null;
+
+  let _scrollingDebounce = null;
+  let _scrollData = null;
 
   const _onKeyDown = function (e) {
     e.preventDefault();
@@ -45,6 +49,18 @@ export function Input(canvas) {
     return false;
   }
 
+  const _onScroll = function (e) {
+    e.preventDefault();
+    clearTimeout(_scrollingDebounce);
+    _scrollingDebounce = setTimeout(() => {
+      _scrollData = null;
+    }, _scrollTimeout);
+    _scrollData = e;
+  }
+
+  const isScrolling = () => _scrollData !== null;
+  const getScrollData = () => _scrollData;
+
   const getMouseData = function () {
     return _mouseData;
   }
@@ -73,6 +89,7 @@ export function Input(canvas) {
 
   window.addEventListener('keydown', _onKeyDown);
   window.addEventListener('keyup', _onKeyUp);
+  canvas.addEventListener('wheel', _onScroll);
   canvas.onmousedown = _onMouseDown;
   canvas.onmouseup = _onMouseUp;
   canvas.addEventListener('mousemove', _onMouseMove);
@@ -84,5 +101,7 @@ export function Input(canvas) {
     isKeyHeld,
     isKeyUp,
     getMouseData,
+    isScrolling,
+    getScrollData,
   }
 };
