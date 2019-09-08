@@ -24,9 +24,18 @@ export function Animator(img) {
   const render = (deltaTime, ctx, xPos, yPos, scale) => {
     const anim = _animations[_currentAnimation];
     if (!_isActive) return;
-
-    if (_currentFrame === anim.getFrameCount() && !anim.isLoop()) {
-
+    if (anim.isStatic()) {
+      ctx.drawImage(
+        _img,
+        anim.getX(),
+        anim.getY(),
+        anim.getTileWidth(),
+        anim.getTileHeight(),
+        xPos,
+        yPos,
+        anim.getTileWidth() * scale,
+        anim.getTileHeight() * scale,
+      );
     } else {
       _currentTime += deltaTime;
       if (_currentTime >= anim.getFrameDuration()) {
@@ -35,19 +44,18 @@ export function Animator(img) {
         _currentFrame++;
         if (_currentFrame > anim.getFrameCount()) _currentFrame = 0;
       }
+      ctx.drawImage(
+        _img,
+        anim.getX() + (_currentFrame * anim.getTileWidth()),
+        anim.getY(),
+        anim.getTileWidth(),
+        anim.getTileHeight(),
+        xPos,
+        yPos,
+        anim.getTileWidth() * scale,
+        anim.getTileHeight() * scale,
+      );
     }
-
-    ctx.drawImage(
-      _img,
-      anim.getX() + (_currentFrame * anim.getTileWidth()),
-      anim.getY(),
-      anim.getTileWidth(),
-      anim.getTileHeight(),
-      xPos,
-      yPos,
-      anim.getTileWidth() * scale,
-      anim.getTileHeight() * scale,
-    );
   }
 
   return {
@@ -59,6 +67,21 @@ export function Animator(img) {
     setAnimation,
     render,
   };
+}
+
+export function StaticAnimation(x, y, tileWidth, tileHeight) {
+  const _x = x;
+  const _y = y;
+  const _tileWidth = tileWidth;
+  const _tileHeight = tileHeight;
+
+  return {
+    getX: () => _x,
+    getY: () => _y,
+    getTileWidth: () => _tileWidth,
+    getTileHeight: () => _tileHeight,
+    isStatic: () => true,
+  }
 }
 
 export function Animation(x, y, tileWidth, tileHeight, frameCount, frameDuration, isLoop) {
@@ -78,5 +101,6 @@ export function Animation(x, y, tileWidth, tileHeight, frameCount, frameDuration
     getFrameDuration: () => _frameDuration,
     getFrameCount: () => _frameCount,
     isLoop: () => _isLoop,
+    isStatic: () => false,
   }
 }
