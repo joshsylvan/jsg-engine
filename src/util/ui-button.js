@@ -7,14 +7,19 @@ export class UiButton extends GameObject {
   constructor(x, y, width, height, scale, tags) {
     super(x, y, width, height, scale, tags);
 
-    this._text = 'button';
+    this._text = null;
+    this._image = null;
 
-    this._hoverBackgroundColor = 'red';
+    this._clickCooldown = 100;
+    this._isCoolingDown = false;
+    this._cooldownTimeout = null;
 
     const defaultProps = {
       textSize: 13,
       textColor: '#ffffff',
       backgroundColor: 'blue',
+      dx: 0,
+      dy: 0,
     };
     this._buttonStates = {
       'idle': { ...defaultProps },
@@ -36,14 +41,20 @@ export class UiButton extends GameObject {
     this._text = text;
   }
 
+  setImage(img) {
+    const image = new Image();
+    image.src = img;
+    this._image = image;
+  }
+
   setButtonState(stateKey) {
     if (!this._buttonStates[stateKey]) throw new Error('Invalid button state');
     this._buttonProps = this._buttonStates[stateKey];
   }
 
-  setButtonProps(stateKey, { text, textSize, textColor, backgroundColor }) {
+  setButtonProps(stateKey, { text, textSize, textColor, backgroundColor, dx = 0, dy = 0 }) {
     if (!this._buttonStates[stateKey]) throw new Error('Invalid button state');
-    this._buttonStates[stateKey] = { text, textSize, textColor, backgroundColor };
+    this._buttonStates[stateKey] = { text, textSize, textColor, backgroundColor, dx, dy };
   }
 
   addEvent(eventKey, eventFunction) {
@@ -51,7 +62,11 @@ export class UiButton extends GameObject {
   }
 
   onClick() {
+    if (this._isCoolingDown) return;
+    this._isCoolingDown = true;
     if (this._events['onclick']) this._events['onclick']();
+    clearTimeout(this._cooldownTimeout);
+    this._cooldownTimeout = setTimeout(() => this._isCoolingDown = false, this._clickCooldown);
   }
 
   onHover() {
@@ -63,6 +78,7 @@ export class UiButton extends GameObject {
   }
 
   input({ canvas, ctx, deltaTime, InputManager, GameManager, Camera }) {
+    if (this._isCoolingDown) return;
     const mousePosition = InputManager.getMousePosition();
     if (isPointInBox(mousePosition.x, mousePosition.y, this)) {
       if (InputManager.isMouseUp()) {
@@ -80,22 +96,39 @@ export class UiButton extends GameObject {
   }
 
   render({ canvas, ctx, deltaTime, InputManager, GameManager, Camera }) {
-    const { x, y, width, height, scale, _buttonProps, _text } = this;
-    const { textSize, textColor, backgroundColor } = _buttonProps;
+    const { x, y, width, height, scale, _buttonProps, _text, _image } = this;
+    const { textSize, textColor, backgroundColor, dx, dy } = _buttonProps;
+
     const cameraPos = Camera.getPosition();
     ctx.beginPath();
-    ctx.fillStyle = backgroundColor;
-    ctx.rect(x - cameraPos.x, y - cameraPos.y, width * scale, height * scale);
-    ctx.fill();
+    if (_image) {
+      ctx.drawImage(
+        _image,
+        dx,
+        dy,
+        width,
+        height,
+        x - cameraPos.x,
+        y - cameraPos.y,
+        width * scale,
+        height * scale,
+      );
+    } else {
+      ctx.fillStyle = backgroundColor;
+      ctx.rect(x - cameraPos.x, y - cameraPos.y, width * scale, height * scale);
+      ctx.fill();
+    }
 
-    ctx.font = `${textSize}px Avenir`;
-    ctx.fillStyle = textColor;
-    ctx.textAlign = "center";
-    ctx.fillText(
-      _text,
-      x - cameraPos.x + (width * scale) / 2,
-      y - cameraPos.y + (height * scale) / 2 + textSize / 3,
-    );
+    if (_text) {
+      ctx.font = `${textSize}px Avenir`;
+      ctx.fillStyle = textColor;
+      ctx.textAlign = "center";
+      ctx.fillText(
+        _text,
+        x - cameraPos.x + (width * scale) / 2,
+        y - cameraPos.y + (height * scale) / 2 + textSize / 3,
+      );
+    }
     ctx.closePath();
   }
 
