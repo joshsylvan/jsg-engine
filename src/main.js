@@ -63,11 +63,10 @@ export const createGame = (canvas) => {
       ctx.beginPath();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.closePath();
-      ctx.translate(x, y);
+      ctx.translate(Math.round(x), Math.round(y));
       GameManager.getCurrentScene().getGameObjects().forEach(obj => {
         obj.render({ canvas, ctx, deltaTime, InputManager, GameManager, Camera });
       });
-
     }
     GameManager.getCurrentScene().getUiObjects().forEach(obj => {
       obj.render({ canvas, ctx, deltaTime, InputManager, GameManager, Camera });

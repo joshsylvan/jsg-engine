@@ -3,6 +3,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
 import image from 'rollup-plugin-img';
 import copy from 'rollup-plugin-copy';
+import json from 'rollup-plugin-json';
 import { uglify } from "rollup-plugin-uglify";
 
 module.exports = {
@@ -14,6 +15,12 @@ module.exports = {
     compact: true,
   },
   plugins: [
+    json({
+      exclude: ['node_modules/**'],
+      preferConst: false,
+      compact: true,
+      namedExports: true
+    }),
     babel({
       exclude: 'node_modules/**',
     }),

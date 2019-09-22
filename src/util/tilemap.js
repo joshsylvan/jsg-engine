@@ -22,6 +22,10 @@ export class TileMap extends GameObject {
     this.scale = scale;
   }
 
+  setTileData(data) {
+    this._tiles = data;
+  }
+
   setSpriteSheet(spriteSheet) {
     const img = new Image();
     img.src = spriteSheet;
@@ -45,7 +49,7 @@ export class TileMap extends GameObject {
     if (!_spriteSheet) throw new Error('No sprite sheet');
 
     _map.forEach((tile, index) => {
-      const { dx, dy, tileWidth, tileHeight, tileId } = _tiles[tile];
+      const { x: dx, y: dy, width: tileWidth, height: tileHeight } = _tiles[tile];
       const col = Math.floor(index % width);
       const row = Math.floor(index / width);
       const xPos = x + col * tileWidth * scale;

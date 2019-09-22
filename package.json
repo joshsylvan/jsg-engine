@@ -26,6 +26,7 @@
     "rollup-plugin-commonjs": "^10.0.1",
     "rollup-plugin-generate-html-template": "^1.2.0",
     "rollup-plugin-img": "^1.1.0",
+    "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-livereload": "^1.0.1",
     "rollup-plugin-uglify": "^6.0.2"
   }

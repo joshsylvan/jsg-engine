@@ -4,6 +4,7 @@ import serve from 'rollup-plugin-serve';
 import livereload from 'rollup-plugin-livereload';
 import image from 'rollup-plugin-img';
 import copy from 'rollup-plugin-copy';
+import json from 'rollup-plugin-json';
 
 module.exports = {
   input: 'src/index.js',
@@ -13,6 +14,12 @@ module.exports = {
     compact: false,
   },
   plugins: [
+    json({
+      exclude: ['node_modules/**'],
+      preferConst: true,
+      compact: true,
+      namedExports: true
+    }),
     copy({
       targets: [
         { src: 'resources/sounds/*', dest: 'dist/resources/sounds' },
